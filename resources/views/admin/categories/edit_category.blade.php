@@ -21,7 +21,7 @@
                     <input type="text" name="category_name" id="category_name" value="{{ $categoryDetails->name }}">
                     </div>
                 </div>
-                <!--<div class="control-group">
+                <div class="control-group">
                     <label class="control-label">Category Level</label>
                     <div class="controls">
                     <select name="parent_id" style="width: 220px;">
@@ -31,7 +31,7 @@
                         @endforeach
                     </select>
                     </div>
-                </div>-->
+                </div>
                 <div class="control-group">
                     <label class="control-label">Description</label>
                     <div class="controls">
@@ -44,7 +44,7 @@
                     <input type="text" name="url" id="url" value="{{ $categoryDetails->url }}">
                     </div>
                 </div>
-                <div class="form-actions">
+                <div class="form-actions">  
                     <input type="submit" value="Edit Category" class="btn btn-success">
                 </div>
                 </form>
