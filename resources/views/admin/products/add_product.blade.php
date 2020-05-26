@@ -42,9 +42,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Product Code</label>
+                    <label class="control-label">Artist Name</label>
                     <div class="controls">
-                    <input type="text" name="product_code" id="product_code">
+                    <input type="text" name="artist_name" id="artist_name">
                     </div>
                 </div>
                 <div class="control-group">

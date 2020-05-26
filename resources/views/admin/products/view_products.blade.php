@@ -34,7 +34,7 @@
                     <th>Category ID</th>
                     <th>Category Name</th>
                     <th>Product Name</th>
-                    <th>Product Code</th>
+                    <th>Artist Name</th>
                     <th>Price</th>
                     <th>Image</th>
                     <th>Actions</th>
@@ -47,14 +47,18 @@
                     <td>{{ $product->category_id }}</td>
                     <td>{{ $product->category_name }}</td>
                     <td>{{ $product->product_name }}</td>
-                    <td>{{ $product->product_code }}</td>
+                    <td>{{ $product->artist_name }}</td>
                     <td>{{ $product->price }}</td>
                     <td>
                         @if(!empty($product->image))
                         <img src="{{ asset('/images/backend_images/products/small/'.$product->image) }}" style="width:60px;">
                         @endif
                     </td>
-                    <td class="center"><a href="#myModal{{ $product->id }}" data-toggle="modal" class="btn btn-success btn-mini">View</a> <a href="{{ url('/admin/edit-product/'.$product->id) }}" class="btn btn-primary btn-mini">Edit</a> <a id="delCat" href="{{ url('/admin/delete-product/'.$product->id) }}" class="btn btn-danger btn-mini">Delete</a></td>
+                    <td class="center">
+                    <a href="#myModal{{ $product->id }}" data-toggle="modal" class="btn btn-success btn-mini">View
+                    </a> <a href="{{ url('/admin/edit-product/'.$product->id) }}" class="btn btn-primary btn-mini">Edit
+                    </a> <a href="{{ url('/admin/add-attribute/'.$product->id) }}" class="btn btn-success btn-mini">Add
+                    </a> <a rel="{{ $product->id }}" rel1="delete-product" <?php /* href="{{ url('/admin/delete-product/'.$product->id) }}"*/ ?> href="javascrpt:" class="btn btn-danger btn-mini deleteRecord">Delete</a></td>
                     </tr>
                         <div id="myModal{{ $product->id }}" class="modal hide">
                         <div class="modal-header">
@@ -64,7 +68,7 @@
                         <div class="modal-body">
                             <p>Product ID: {{ $product->id }}</p>
                             <p>Category ID: {{ $product->category_id }}</p>
-                            <p>Product Code: {{ $product->product_code }}</p>
+                            <p>Artist Name: {{ $product->artist_name }}</p>
                             <p>Price: {{ $product->price }}</p>
                             <p>Description: {{ $product->description }}</p>
                         </div>

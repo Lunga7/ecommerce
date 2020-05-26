@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','IndexController@index' );
 
 Route::match(['get','post'], '/admin','AdminController@login');
 
@@ -40,7 +38,13 @@ Route::group(['middleware' => ['auth']], function()
 	Route::match(['get','post'],'/admin/add-product','ProductsController@addProduct');
     Route::get('/admin/view-products','ProductsController@viewProducts');
     Route::match(['get','post'],'/admin/edit-product/{id}','ProductsController@editProduct');
-    Route::match(['get','post'],'/admin/delete-product/{id}','ProductsController@deleteProduct');
+    Route::get('/admin/delete-product/{id}','ProductsController@deleteProduct');
+    Route::get('/admin/delete-product-image/{id}','ProductsController@deleteProductImage');
+
+    //Products Attributes routes
+    Route::match(['get', 'post'], '/admin/add-attribute/{id}', 'ProductsController@addAttributes');
+    Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
+
 });
 
 

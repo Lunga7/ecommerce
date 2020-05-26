@@ -9,6 +9,7 @@ use Session;
 use Image;
 use App\Category;
 use App\Product;
+use App\ProductsAttribute;
 
 class ProductsController extends Controller
 {
@@ -27,7 +28,7 @@ class ProductsController extends Controller
             $product = new Product;
             $product->category_id = $data['category_id'];
             $product->product_name = $data['product_name'];
-            $product->product_code = $data['product_code'];
+            $product->artist_name = $data['artist_name'];
             if(!empty($data['description'])){
                 $product->description = $data['description'];
             }else{
@@ -93,7 +94,36 @@ class ProductsController extends Controller
         {
             $data = $request->all();
             //echo "<pre>"; print_r($data); die;
-            Product::where(['id'=>$id])->update(['category_id'=>$data['category_id'],'product_name'=>$data['product_name'],'product_code'=>$data['product_code'],'description'=>$data['description'],'price'=>$data['price']]);
+
+            // Upload Image
+            if($request->hasFile('image'))
+            {
+                $image_tmp = $request->file('image');
+                if($image_tmp->isValid()){
+                    $extension = $image_tmp->getClientOriginalExtension();
+                    $filename = rand(111,99999).'.'.$extension;
+                    $large_image_path = 'images/backend_images/products/large/'.$filename;
+                    $medium_image_path = 'images/backend_images/products/medium/'.$filename;
+                    $small_image_path = 'images/backend_images/products/small/'.$filename;
+                    // Resize Images
+                    Image::make($image_tmp)->save($large_image_path);
+                    Image::make($image_tmp)->resize(600,600)->save($medium_image_path);
+                    Image::make($image_tmp)->resize(300,300)->save($small_image_path);
+
+                }
+            }else
+            {
+                $filename = $data['current_image'];
+            }
+
+            //checking if description is empty
+            if(empty($data['description']))
+            {
+                $data['description'] = '';
+            }
+
+
+            Product::where(['id'=>$id])->update(['category_id'=>$data['category_id'],'product_name'=>$data['product_name'],'artist_name'=>$data['artist_name'],'description'=>$data['description'],'price'=>$data['price'], 'image'=>$filename]);
             return redirect('/admin/view-products')->with('flash_message_success','Category updated Successfully!');
         }
 
@@ -130,14 +160,51 @@ class ProductsController extends Controller
         return view('admin.products.edit_product')->with(compact('productDetails', 'categories_dropdown'));
     }
 
-    //method to delete categories
-    public function deleteProduct(Request $request, $id = null)
+    //method to delete products
+    public function deleteProduct($id = null)
     {
-        if(!empty($id))
+        Product::where(['id'=>$id])->delete();
+        return redirect()->back()->with('flash_message_success','Product deleted Successfully!');
+    }
+
+    //deleting the product image
+    public function deleteProductImage($id = null)
+    {
+        Product::where(['id'=>$id])->update(['image'=>'']);
+        return redirect()->back()->with('flash_message_success', 'Product Image has been deleted successfully');
+    }
+
+    //method to add products attributes
+    public function addAttributes(Request $request, $id=null)
+    {
+        $productDetails = Product::with('attributes')->where(['id'=>$id])->first();
+        //$productDetails = json_decode(json_encode($productDetails));
+        //echo "<pre>"; print_r($productDetails); die;
+        if($request->isMethod('post'))
         {
-            Product::where(['id'=>$id])->delete();
-            return redirect()->back()->with('flash_message_success','Product deleted Successfully!');
+            $data = $request->all();
+            
+            foreach($data['price'] as $key => $val)
+            {
+                if(!empty($val))
+                {
+                    $productAttributes = new ProductsAttribute;
+                    $productAttributes->product_id = $id;
+                    $productAttributes->price = $val;
+                    $productAttributes->stock = $data['stock'][$key];
+                    $productAttributes->save();
+                }
+            }
+            return redirect('/admin/add-attribute/'.$id)->with('flash_message_success','Attribute has been added Successfully!');
         }
+        return view('admin.products.add_attributes')->with(compact('productDetails'));
+    }
+
+    //deleting the attribute
+    public function deleteAttribute($id = null)
+    {
+        ProductsAttribute::where(['id'=>$id])->delete();
+        return redirect()->back()->with('flash_message_success', 'Attribute has been deleted successfully');
     }
 
 }

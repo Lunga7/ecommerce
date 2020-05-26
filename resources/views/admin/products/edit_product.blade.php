@@ -42,9 +42,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">Product Code</label>
+                    <label class="control-label">Artist Name</label>
                     <div class="controls">
-                    <input type="text" name="product_code" id="product_code" value="{{ $productDetails->product_code }}">
+                    <input type="text" name="artist_name" id="artist_name" value="{{ $productDetails->artist_name }}">
                     </div>
                 </div>
                 <div class="control-group">
@@ -63,6 +63,10 @@
                     <label class="control-label">Image</label>
                     <div class="controls">
                     <input type="file" name="image" id="image">
+                    <input type="hidden" name="current_image" value="{{ $productDetails->image }}">
+                    @if(!empty($productDetails->image))
+                        <img style="width:40px" src="{{ asset('/images/backend_images/products/small/'.$productDetails->image) }}"> | <a href="{{ url('/admin/delete-product-image/'.$productDetails->id) }}">Delete</a>
+                    @endif
                     </div>
                 </div>
                 <div class="form-actions">
