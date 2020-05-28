@@ -21,6 +21,12 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Category listing page
+Route::get('/products/{url}', 'ProductsController@products');
+
+//product details
+Route::get('product/{id}','ProductsController@product');
+
 Route::group(['middleware' => ['auth']], function()
 {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
